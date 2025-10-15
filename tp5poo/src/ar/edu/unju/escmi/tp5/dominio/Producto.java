@@ -15,26 +15,41 @@ public class Producto {
         this.stock = stock;
     }
 
-    public int getCodigoProducto() { return codigoProducto; }
-    public String getDescripcion() { return descripcion; }
-    public double getPrecioUnitario() { return precioUnitario; }
-    public int getDescuento() { return descuento; }
-    public int getStock() { return stock; }
+    public int getCodigoProducto() {
+        return codigoProducto;
+    }
 
-    public void setStock(int stock) { this.stock = stock; }
-    public void reducirStock(int cantidad) { this.stock -= cantidad; }
-    public void aumentarStock(int cantidad) { this.stock += cantidad; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-    public double precioConDescuentoUnitario() {
-        if (descuento > 0) {
-            return precioUnitario * (1 - descuento / 100.0);
-        }
+    public double getPrecioUnitario() {
         return precioUnitario;
+    }
+
+    public int getDescuento() {
+        return descuento;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void reducirStock(int cantidad) {
+        if (cantidad <= stock) {
+            stock -= cantidad;
+        } else {
+            throw new IllegalArgumentException("Stock insuficiente");
+        }
+    }
+
+    public void aumentarStock(int cantidad) {
+        stock += cantidad;
     }
 
     @Override
     public String toString() {
-        return String.format("Codigo:%d - %s - $%.2f - Desc:%d%% - Stock:%d",
+        return String.format("[%d] %s - $%.2f - Desc: %d%% - Stock: %d",
                 codigoProducto, descripcion, precioUnitario, descuento, stock);
     }
 }

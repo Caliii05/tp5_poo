@@ -1,26 +1,20 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
 public class ClienteMinorista extends Cliente {
-    private boolean tienePami;
+    private boolean pami;
 
-    public ClienteMinorista(String nombre, String domicilio, int dni, boolean tienePami) {
-        super(nombre, domicilio, dni);
-        this.tienePami = tienePami;
+    public ClienteMinorista(String nombre, String domicilio, int dni, String telefono, boolean pami) {
+        super(nombre, domicilio, dni, telefono);
+        this.pami = pami;
     }
 
-    public boolean isTienePami() { return tienePami; }
-
-    @Override
-    public double aplicarDescuentoGlobal(double total) {
-        
-        if (tienePami) {
-            return total * 0.90;
-        }
-        return total;
+    public boolean isPami() {
+        return pami;
     }
 
     @Override
-    public String mostrarDatos() {
-        return "Minorista - " + nombre + " - " + domicilio + " - DNI: " + dni + " - PAMI: " + (tienePami ? "SI" : "NO");
+    public void mostrarDatos() {
+        System.out.printf("Minorista: %s - DNI: %d - PAMI: %s - Domicilio: %s - Tel: %s%n",
+                nombre, dni, pami ? "Sí" : "No", domicilio, telefono);
     }
 }
