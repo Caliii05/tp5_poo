@@ -1,209 +1,183 @@
 package ar.edu.unju.escmi.tp5.principal;
 
+import ar.edu.unju.escmi.tp5.collections.CollectionCliente;
+import ar.edu.unju.escmi.tp5.collections.CollectionFactura;
+import ar.edu.unju.escmi.tp5.collections.CollectionProducto;
+import ar.edu.unju.escmi.tp5.collections.CollectionStock;
 import ar.edu.unju.escmi.tp5.dominio.*;
-import ar.edu.unju.escmi.tp5.collections.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
+
+import java.util.Scanner;
 
 public class Principal {
     private static Scanner sc = new Scanner(System.in);
+    private static EncargadoVenta encargado = new EncargadoVenta("Carlos Perez", 12345678, "E-001");
+    private static AdministradorVenta admin = new AdministradorVenta("Ana Gomez", 87654321, "A-001");
 
     public static void main(String[] args) {
-        precargaDatos();
-        mostrarMenu();
+        precarga();
+        menu();
     }
 
-    private static void precargaDatos() {
+    private static void precarga() {
         // clientes
-        ClienteMayorista cm = new ClienteMayorista("Distribuciones Srl", "Av. Central 100", 20123456, 9001);
-        ClienteMinorista cmi1 = new ClienteMinorista("Ana Perez", "Calle Falsa 123", 30123456, true);
-        ClienteMinorista cmi2 = new ClienteMinorista("Juan Gomez", "Alameda 50", 30111111, false);
-        CollectionCliente.guardarCliente(cm);
-        CollectionCliente.guardarCliente(cmi1);
-        CollectionCliente.guardarCliente(cmi2);
+        Cliente c1 = new ClienteMinorista("Juan Lopez", "Mitre 123", 30111222, "387-111111", true);
+        Cliente c2 = new ClienteMayorista("Distribuciones SA", "Ruta 1 km 5", 30777888, "388-222222", 1001);
+        CollectionCliente.guardarCliente(c1);
+        CollectionCliente.guardarCliente(c2);
 
         // productos
-        Producto p1 = new Producto(1001, "Fideo Knorr Spaghetti x500gr", 1200.00, 0, 5000);
-        Producto p2 = new Producto(1002, "Arroz Gallo 1kg", 1500.00, 25, 2000);
-        Producto p3 = new Producto(1003, "Aceite Cocina 1L", 3000.00, 0, 800);
+        Producto p1 = new Producto(1002, "Fideo Knorr Spaghetti x500g", 1200.00, 0, 5000);
+        Producto p2 = new Producto(1003, "Arroz Largo Fino x1kg", 1500.00, 25, 3000);
         CollectionProducto.guardarProducto(p1);
         CollectionProducto.guardarProducto(p2);
-        CollectionProducto.guardarProducto(p3);
 
+        // stock
+        CollectionStock.registrarProducto(p1);
+        CollectionStock.registrarProducto(p2);
     }
 
-    private static void mostrarMenu() {
-        EncargadoVentas encargado = new EncargadoVentas("Carlos", 40123456, "E-01");
-        AdministradorVentas admin = new AdministradorVentas("María", 40111111, "A-01");
-
-        boolean salir = false;
-        while (!salir) {
-            System.out.println("\n--- MENU PRINCIPAL ---");
-            System.out.println("1) Mostrar todas las ventas (Encargado)");
-            System.out.println("2) Mostrar total de todas las ventas (Encargado)");
-            System.out.println("3) Verificar stock de un producto (Encargado)");
-            System.out.println("4) Buscar factura por número (Cliente / General)");
-            System.out.println("5) Alta de producto (Administrador)");
-            System.out.println("6) Cargar stock de producto (Administrador)");
-            System.out.println("7) Realizar venta (Administrador)");
-            System.out.println("8) Listar productos");
-            System.out.println("9) Listar clientes");
-            System.out.println("0) Salir");
-            System.out.print("Elija una opción: ");
-            String opt = sc.nextLine();
-            switch (opt) {
-                case "1": mostrarVentas(encargado); break;
-                case "2": System.out.printf("Total ventas: $%.2f\n", encargado.calcularTotalVentas()); break;
-                case "3": verificarStock(encargado); break;
-                case "4": buscarFactura(); break;
-                case "5": altaProducto(admin); break;
-                case "6": cargarStock(admin); break;
-                case "7": realizarVenta(); break;
-                case "8": listarProductos(); break;
-                case "9": listarClientes(); break;
-                case "0": salir = true; break;
-                default: System.out.println("Opción inválida."); break;
+    private static void menu() {
+        int opc;
+        do {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1. Mostrar ventas");
+            System.out.println("2. Mostrar total de todas las ventas");
+            System.out.println("3. Verificar stock de producto (por código)");
+            System.out.println("4. Alta de producto");
+            System.out.println("5. Realizar venta");
+            System.out.println("6. Buscar factura por N°");
+            System.out.println("0. Salir");
+            System.out.print("Opción: ");
+            opc = Integer.parseInt(sc.nextLine());
+            switch (opc) {
+                case 1:
+                    encargado.mostrarVentas();
+                    break;
+                case 2:
+                    double total = encargado.calcularTotalVentas();
+                    System.out.printf("Total de todas las ventas: $%.2f%n", total);
+                    break;
+                case 3:
+                    System.out.print("Ingrese código de producto: ");
+                    int cod = Integer.parseInt(sc.nextLine());
+                    encargado.verificarStock(cod);
+                    break;
+                case 4:
+                    altaProductoMenu();
+                    break;
+                case 5:
+                    realizarVentaMenu();
+                    break;
+                case 6:
+                    buscarFacturaMenu();
+                    break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
             }
-        }
-        System.out.println("Saliendo...");
+        } while (opc != 0);
     }
 
-    private static void mostrarVentas(EncargadoVentas encargado) {
-        List<Venta> ventas = encargado.mostrarVentas();
-        if (ventas.isEmpty()) {
-            System.out.println("No hay ventas registradas.");
-            return;
-        }
-        for (Venta v : ventas) {
-            System.out.println(v);
-            if (v.getFactura() != null) System.out.println(v.getFactura());
-        }
-    }
-
-    private static void verificarStock(EncargadoVentas encargado) {
-        System.out.print("Ingrese código de producto: ");
-        int codigo = Integer.parseInt(sc.nextLine());
-        Producto p = encargado.verificarStock(codigo);
-        if (p == null) System.out.println("Producto no encontrado.");
-        else System.out.println(p);
-    }
-
-    private static void buscarFactura() {
-        System.out.print("Ingrese número de factura: ");
-        int num = Integer.parseInt(sc.nextLine());
-        Factura f = CollectionFactura.buscarPorNumero(num);
-        if (f == null) System.out.println("Factura no encontrada.");
-        else System.out.println(f);
-    }
-
-    private static void altaProducto(AdministradorVentas admin) {
+    private static void altaProductoMenu() {
         try {
             System.out.print("Código producto: ");
-            int cod = Integer.parseInt(sc.nextLine());
+            int c = Integer.parseInt(sc.nextLine());
             System.out.print("Descripción: ");
-            String desc = sc.nextLine();
+            String d = sc.nextLine();
             System.out.print("Precio unitario: ");
-            double precio = Double.parseDouble(sc.nextLine());
-            System.out.print("Descuento (0,25,30): ");
-            int descuento = Integer.parseInt(sc.nextLine());
-            System.out.print("Stock inicial (unidades): ");
+            double p = Double.parseDouble(sc.nextLine());
+            System.out.print("Descuento (0/25/30): ");
+            int desc = Integer.parseInt(sc.nextLine());
+            System.out.print("Stock inicial: ");
             int stock = Integer.parseInt(sc.nextLine());
-            Producto p = new Producto(cod, desc, precio, descuento, stock);
-            boolean ok = admin.altaProducto(p);
-            if (ok) System.out.println("Producto dado de alta correctamente.");
-            else System.out.println("Error: producto con ese código ya existe.");
-        } catch (Exception e) {
-            System.out.println("Error en datos ingresados.");
+
+            Producto prod = new Producto(c, d, p, desc, stock);
+            boolean ok = admin.altaProducto(prod);
+            if (ok) {
+                CollectionStock.registrarProducto(prod);
+                System.out.println("Producto dado de alta correctamente.");
+            } else {
+                System.out.println("Ya existe un producto con ese código.");
+            }
+        } catch (Exception ex) {
+            System.out.println("Error en datos de producto: " + ex.getMessage());
         }
     }
 
-    private static void cargarStock(AdministradorVentas admin) {
+    private static void realizarVentaMenu() {
         try {
-            System.out.print("Código producto: ");
-            int cod = Integer.parseInt(sc.nextLine());
-            System.out.print("Cantidad a cargar: ");
-            int cant = Integer.parseInt(sc.nextLine());
-            boolean ok = admin.cargarStock(cod, cant);
-            if (ok) System.out.println("Stock actualizado.");
-            else System.out.println("Producto no encontrado.");
-        } catch (Exception e) {
-            System.out.println("Error en datos ingresados.");
-        }
-    }
-
-    private static void realizarVenta() {
-        try {
-            System.out.println("----- Realizar Venta -----");
-            System.out.print("Ingrese DNI del cliente (si no existe se pedirá datos para registrar cliente minorista): ");
+            System.out.print("DNI del cliente: ");
             int dni = Integer.parseInt(sc.nextLine());
-            Cliente cliente = CollectionCliente.buscarPorDni(dni);
+            Cliente cliente = CollectionCliente.buscarCliente(dni);
             if (cliente == null) {
-                System.out.println("Cliente no encontrado. Se creará un cliente minorista.");
-                System.out.print("Nombre: ");
-                String nombre = sc.nextLine();
-                System.out.print("Domicilio: ");
-                String dom = sc.nextLine();
-                System.out.print("¿Tiene PAMI? (s/n): ");
-                boolean pami = sc.nextLine().trim().equalsIgnoreCase("s");
-                cliente = new ClienteMinorista(nombre, dom, dni, pami);
-                CollectionCliente.guardarCliente(cliente);
-            }
-
-            Venta venta = new Venta(cliente);
-            boolean seguir = true;
-            final int BULTOSIZE = 10;
-            while (seguir) {
-                listarProductos();
-                System.out.print("Ingrese código producto a vender (0 para finalizar): ");
-                int cod = Integer.parseInt(sc.nextLine());
-                if (cod == 0) break;
-                Producto p = CollectionProducto.buscarProducto(cod);
-                if (p == null) { System.out.println("Producto no existe."); continue; }
-                System.out.println(p);
-                System.out.print("Ingrese cantidad: ");
-                int cantidad = Integer.parseInt(sc.nextLine());
-                double precioUnitarioAplicado;
-                int unidadesReales = cantidad;
-                if (cliente instanceof ClienteMayorista) {
-                    unidadesReales = cantidad * BULTOSIZE;
-                    precioUnitarioAplicado = p.getPrecioUnitario() / 2.0;
-                } else {
-                    precioUnitarioAplicado = p.precioConDescuentoUnitario();
-                }
-                if (p.getStock() < unidadesReales) {
-                    System.out.println("Stock insuficiente. Stock actual: " + p.getStock());
-                    continue;
-                }
-                Detalle d = new Detalle(p, unidadesReales, precioUnitarioAplicado);
-                venta.agregarDetalle(d);
-                System.out.print("Agregar otro producto? (s/n): ");
-                if (!sc.nextLine().trim().equalsIgnoreCase("s")) seguir = false;
-            }
-
-            if (venta.getDetalles().isEmpty()) {
-                System.out.println("No se agregaron productos. Venta cancelada.");
+                System.out.println("Cliente no encontrado. Debe estar registrado.");
                 return;
             }
-            Factura f = venta.finalizarVenta();
-            System.out.println("Venta realizada. Factura generada:");
+            int nro = CollectionFactura.getSiguienteNumero();
+            Factura factura = new Factura(nro, cliente);
+
+            while (true) {
+                System.out.print("Ingrese código de producto (0 para terminar): ");
+                int cod = Integer.parseInt(sc.nextLine());
+                if (cod == 0) break;
+                Producto prod = CollectionProducto.buscarProducto(cod);
+                if (prod == null) {
+                    System.out.println("Producto no encontrado.");
+                    continue;
+                }
+                System.out.print("Cantidad: ");
+                int cantidad = Integer.parseInt(sc.nextLine());
+
+                double precioUnitario = prod.getPrecioUnitario();
+                if (cliente instanceof ClienteMayorista) {
+                    precioUnitario = precioUnitario / 2.0;
+                }
+
+                Detalle detalle = new Detalle(prod.getDescripcion(), cantidad, precioUnitario);
+                if (prod.getDescuento() > 0) {
+                    detalle.aplicarDescuento(prod.getDescuento());
+                }
+
+                if (cliente instanceof ClienteMinorista) {
+                    ClienteMinorista cm = (ClienteMinorista) cliente;
+                    if (cm.isPami()) {
+                        detalle.aplicarDescuento(10);
+                    }
+                }
+
+                // Verificar stock
+                if (prod.getStock() < cantidad) {
+                    System.out.println("Stock insuficiente. Disponible: " + prod.getStock());
+                    continue;
+                }
+
+                prod.reducirStock(cantidad);
+                CollectionStock.actualizarStock(prod);
+
+                factura.agregarDetalle(detalle);
+
+                System.out.println("Detalle agregado: " + detalle);
+            }
+
+            factura.calcularTotal();
+            
+            admin.realizarVenta(factura);
+
+        } catch (Exception ex) {
+            System.out.println("Error al realizar venta: " + ex.getMessage());
+        }
+    }
+
+    private static void buscarFacturaMenu() {
+        System.out.print("Número de factura: ");
+        int nro = Integer.parseInt(sc.nextLine());
+        Factura f = CollectionFactura.buscarFactura(nro);
+        if (f == null) {
+            System.out.println("Factura no encontrada.");
+        } else {
             System.out.println(f);
-        } catch (Exception e) {
-            System.out.println("Error en realización de venta: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private static void listarProductos() {
-        System.out.println("=== Productos ===");
-        for (Producto p : CollectionProducto.getProductos()) {
-            System.out.println(p);
-        }
-    }
-
-    private static void listarClientes() {
-        System.out.println("=== Clientes ===");
-        for (Cliente c : CollectionCliente.getClientes()) {
-            System.out.println(c.mostrarDatos());
         }
     }
 }

@@ -1,6 +1,6 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
-public class Empleado {
+public abstract class Empleado {
     protected String nombre;
     protected int dni;
     protected String legajo;
@@ -11,11 +11,17 @@ public class Empleado {
         this.legajo = legajo;
     }
 
-    public String getNombre() { return nombre; }
-    public int getDni() { return dni; }
-    public String getLegajo() { return legajo; }
-
-    public String mostrarDatos() {
-        return String.format("Empleado %s - DNI:%d - Legajo:%s", nombre, dni, legajo);
+    public String getNombre() {
+        return nombre;
     }
+
+    public int getDni() {
+        return dni;
+    }
+
+    public String getLegajo() {
+        return legajo;
+    }
+
+    public abstract void mostrarVentas();
 }
