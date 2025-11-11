@@ -1,38 +1,24 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
 public abstract class Cliente {
+    protected String apellido;
     protected String nombre;
-    protected String domicilio;
-    protected int dni;
-    protected String telefono;
+    protected String direccion;
 
-    public Cliente(String nombre, String domicilio, int dni, String telefono) {
+    public Cliente(String apellido, String nombre, String direccion) {
+        this.apellido = apellido;
         this.nombre = nombre;
-        this.domicilio = domicilio;
-        this.dni = dni;
-        this.telefono = telefono;
+        this.direccion = direccion;
     }
 
-    public abstract void mostrarDatos();
+    public abstract double calcularDescuento(double total);
 
-    public void realizarPago(double monto) {
-        
-        System.out.printf("Cliente %s pagó $%.2f en efectivo.%n", nombre, monto);
+    public String getNombreCompleto() {
+        return apellido + ", " + nombre;
     }
 
-    public int getDni() {
-        return dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public String getTelefono() {
-        return telefono;
+    @Override
+    public String toString() {
+        return "Cliente: " + getNombreCompleto() + " - Dirección: " + direccion;
     }
 }

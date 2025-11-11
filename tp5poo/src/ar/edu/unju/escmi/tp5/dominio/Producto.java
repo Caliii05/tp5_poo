@@ -1,22 +1,24 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
 public class Producto {
-    private int codigoProducto;
+    private int codigo;
     private String descripcion;
     private double precioUnitario;
-    private int descuento;
-    private int stock;
+    private int descuento; // 0, 25 o 30 %
 
-    public Producto(int codigoProducto, String descripcion, double precioUnitario, int descuento, int stock) {
-        this.codigoProducto = codigoProducto;
+    public Producto(int codigo, String descripcion, double precioUnitario, int descuento) {
+        this.codigo = codigo;
         this.descripcion = descripcion;
         this.precioUnitario = precioUnitario;
         this.descuento = descuento;
-        this.stock = stock;
     }
 
-    public int getCodigoProducto() {
-        return codigoProducto;
+    public double obtenerPrecioConDescuento() {
+        return precioUnitario * (1 - descuento / 100.0);
+    }
+
+    public int getCodigo() {
+        return codigo;
     }
 
     public String getDescripcion() {
@@ -27,29 +29,8 @@ public class Producto {
         return precioUnitario;
     }
 
-    public int getDescuento() {
-        return descuento;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void reducirStock(int cantidad) {
-        if (cantidad <= stock) {
-            stock -= cantidad;
-        } else {
-            throw new IllegalArgumentException("Stock insuficiente");
-        }
-    }
-
-    public void aumentarStock(int cantidad) {
-        stock += cantidad;
-    }
-
     @Override
     public String toString() {
-        return String.format("[%d] %s - $%.2f - Desc: %d%% - Stock: %d",
-                codigoProducto, descripcion, precioUnitario, descuento, stock);
+        return codigo + " - " + descripcion + " ($" + precioUnitario + ", desc=" + descuento + "%)";
     }
 }

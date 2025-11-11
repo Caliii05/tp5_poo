@@ -1,31 +1,28 @@
 package ar.edu.unju.escmi.tp5.collections;
 
-import ar.edu.unju.escmi.tp5.dominio.Factura;
-
 import java.util.ArrayList;
 import java.util.List;
+import ar.edu.unju.escmi.tp5.dominio.Factura;
 
 public class CollectionFactura {
     public static List<Factura> facturas = new ArrayList<>();
-    private static int siguienteNumero = 1;
 
-    public static int getSiguienteNumero() {
-        return siguienteNumero++;
-    }
-
-    public static boolean guardarFactura(Factura f) {
+    public static void agregarFactura(Factura f) {
         facturas.add(f);
-        return true;
     }
 
-    public static Factura buscarFactura(int numero) {
+    public static Factura buscarPorNumero(int numero) {
         for (Factura f : facturas) {
-            if (f.getNumero() == numero) return f;
+            if (f.toString().contains("Factura N° " + numero))
+                return f;
         }
         return null;
     }
 
-    public static List<Factura> getFacturas() {
-        return facturas;
+    public static double totalVentas() {
+        double total = 0;
+        for (Factura f : facturas)
+            total += f.calcularTotal();
+        return total;
     }
 }

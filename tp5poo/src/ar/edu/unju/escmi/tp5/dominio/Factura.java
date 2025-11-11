@@ -7,60 +7,32 @@ import java.util.List;
 public class Factura {
     private int numero;
     private LocalDate fecha;
-    private double total;
     private Cliente cliente;
-    private List<Detalle> detalles;
+    private List<DetalleFactura> detalles;
 
     public Factura(int numero, Cliente cliente) {
         this.numero = numero;
         this.fecha = LocalDate.now();
         this.cliente = cliente;
         this.detalles = new ArrayList<>();
-        this.total = 0.0;
     }
 
-    public void agregarDetalle(Detalle d) {
-        detalles.add(d);
-        calcularTotal();
+    public void agregarDetalle(DetalleFactura detalle) {
+        detalles.add(detalle);
     }
 
-    public void calcularTotal() {
-        double suma = 0;
-        for (Detalle d : detalles) {
-            suma += d.getSubtotal();
+    public double calcularTotal() {
+        double total = 0;
+        for (DetalleFactura d : detalles) {
+            total += d.calcularImporte();
         }
-        this.total = suma;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public List<Detalle> getDetalles() {
-        return detalles;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
+        return cliente.calcularDescuento(total);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Factura N°%d - Fecha: %s - Cliente: %s - Total: $%.2f%n",
-                numero, fecha, cliente.getNombre(), total));
-        sb.append("Detalles:\n");
-        for (Detalle d : detalles) {
-            sb.append("  ").append(d.toString()).append("\n");
-        }
-        return sb.toString();
+        return "Factura N° " + numero + " - Fecha: " + fecha + "\n" +
+               cliente + "\n" +
+               "Total: $" + calcularTotal();
     }
 }
