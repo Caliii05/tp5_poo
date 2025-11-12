@@ -1,23 +1,21 @@
 package ar.edu.unju.escmi.tp5.collections;
 
+import java.util.ArrayList;
+import java.util.List;
+import ar.edu.unju.escmi.tp5.dominio.Stock;
 import ar.edu.unju.escmi.tp5.dominio.Producto;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class CollectionStock {
-    
-    public static Map<Integer, Integer> stockMap = new HashMap<>();
+    public static List<Stock> stocks = new ArrayList<>();
 
-    public static void registrarProducto(Producto p) {
-        stockMap.put(p.getCodigoProducto(), p.getStock());
+    public static void agregarStock(Stock s) {
+        stocks.add(s);
     }
 
-    public static void actualizarStock(Producto p) {
-        stockMap.put(p.getCodigoProducto(), p.getStock());
-    }
-
-    public static Integer getStock(int codigo) {
-        return stockMap.get(codigo);
+    public static Stock buscarPorProducto(int codigoProducto) {
+        for (Stock s : stocks) {
+            if (s.getProducto().getCodigoProducto() == codigoProducto) return s;
+        }
+        return null;
     }
 }

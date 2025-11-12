@@ -1,17 +1,18 @@
 package ar.edu.unju.escmi.tp5.collections;
 
-import ar.edu.unju.escmi.tp5.dominio.Producto;
-
 import java.util.ArrayList;
 import java.util.List;
+import ar.edu.unju.escmi.tp5.dominio.Producto;
 
 public class CollectionProducto {
     public static List<Producto> productos = new ArrayList<>();
 
     public static boolean guardarProducto(Producto p) {
-        if (buscarProducto(p.getCodigoProducto()) != null) return false;
-        productos.add(p);
-        return true;
+        
+        if (buscarProducto(p.getCodigoProducto()) == null) {
+            return productos.add(p);
+        }
+        return false;
     }
 
     public static Producto buscarProducto(int codigo) {
@@ -19,15 +20,5 @@ public class CollectionProducto {
             if (p.getCodigoProducto() == codigo) return p;
         }
         return null;
-    }
-
-    public static Integer getStockByCodigo(int codigo) {
-        Producto p = buscarProducto(codigo);
-        if (p == null) return null;
-        return p.getStock();
-    }
-
-    public static List<Producto> getProductos() {
-        return productos;
     }
 }
