@@ -7,22 +7,22 @@ import ar.edu.unju.escmi.tp5.dominio.Factura;
 public class CollectionFactura {
     public static List<Factura> facturas = new ArrayList<>();
 
-    public static void agregarFactura(Factura f) {
-        facturas.add(f);
+    public static boolean guardarFactura(Factura f) {
+        return facturas.add(f);
     }
 
-    public static Factura buscarPorNumero(int numero) {
+    public static Factura buscarFactura(int numero) {
         for (Factura f : facturas) {
-            if (f.toString().contains("Factura N° " + numero))
-                return f;
+            if (f.getNumero() == numero) return f;
         }
         return null;
     }
 
-    public static double totalVentas() {
-        double total = 0;
-        for (Factura f : facturas)
-            total += f.calcularTotal();
-        return total;
+    public static double calcularTotalVentas() {
+        double suma = 0.0;
+        for (Factura f : facturas) {
+            suma += f.calcularTotal();
+        }
+        return suma;
     }
 }

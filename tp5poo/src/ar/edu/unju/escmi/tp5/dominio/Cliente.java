@@ -1,24 +1,50 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Cliente {
-    protected String apellido;
     protected String nombre;
-    protected String direccion;
+    protected String domicilio;
+    protected int dni;
+    protected int telefono;
+    protected List<Factura> facturas;
 
-    public Cliente(String apellido, String nombre, String direccion) {
-        this.apellido = apellido;
+    public Cliente(String nombre, String domicilio, int dni, int telefono) {
         this.nombre = nombre;
-        this.direccion = direccion;
+        this.domicilio = domicilio;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.facturas = new ArrayList<>();
     }
 
-    public abstract double calcularDescuento(double total);
-
-    public String getNombreCompleto() {
-        return apellido + ", " + nombre;
+    public void agregarFactura(Factura f) {
+        this.facturas.add(f);
     }
 
-    @Override
-    public String toString() {
-        return "Cliente: " + getNombreCompleto() + " - Dirección: " + direccion;
+    public Factura buscarFactura(int nroFactura) {
+        for (Factura f : facturas) {
+            if (f.getNumero() == nroFactura) return f;
+        }
+        return null;
     }
+
+    public void mostrarDatos() {
+        System.out.println("Nombre: " + nombre + " - Domicilio: " + domicilio + " - DNI: " + dni);
+    }
+
+    public abstract double aplicarDescuentoCliente(double total);
+
+    public double realizarPago(double monto, double totalFactura) {
+        if (monto < totalFactura) {
+            System.out.println("Pago insuficiente. Faltan: $" + (totalFactura - monto));
+            return -1;
+        }
+        double cambio = monto - totalFactura;
+        System.out.println("Pago recibido. Cambio: $" + cambio);
+        return cambio;
+    }
+
+    public int getDni() { return dni; }
+    public String getNombre() { return nombre; }
 }

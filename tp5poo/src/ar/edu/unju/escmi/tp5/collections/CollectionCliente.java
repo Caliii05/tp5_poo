@@ -2,13 +2,19 @@ package ar.edu.unju.escmi.tp5.collections;
 
 import java.util.ArrayList;
 import java.util.List;
-import ar.edu.unju.escmi.tp5.dominio.*;
+import ar.edu.unju.escmi.tp5.dominio.Cliente;
 
 public class CollectionCliente {
     public static List<Cliente> clientes = new ArrayList<>();
 
-    public static void precargar() {
-        clientes.add(new ClienteMayorista("Pérez", "Carlos", "Av. Belgrano 123", "M001"));
-        clientes.add(new ClienteMinorista("Gómez", "Lucía", "San Martín 555", "40123456", true));
+    public static boolean guardarCliente(Cliente c) {
+        return clientes.add(c);
+    }
+
+    public static Cliente buscarClientePorDni(int dni) {
+        for (Cliente c : clientes) {
+            if (c.getDni() == dni) return c;
+        }
+        return null;
     }
 }

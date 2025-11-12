@@ -9,20 +9,18 @@ public class Stock {
         this.cantidad = cantidad;
     }
 
-    public void actualizarStock(int cantidadVendida) {
-        cantidad -= cantidadVendida;
-    }
+    public Producto getProducto() { return producto; }
+    public int getCantidad() { return cantidad; }
 
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public Producto getProducto() {
-        return producto;
+    public void actualizarStock(int cantVendida) {
+        this.cantidad -= cantVendida;
+        if (this.cantidad < 0) this.cantidad = 0;
+        // también sincronizamos con el producto si es necesario
+        producto.actualizarStock(cantVendida);
     }
 
     @Override
     public String toString() {
-        return producto.getDescripcion() + " - Stock: " + cantidad;
+        return producto.getDescripcion() + " (cod:" + producto.getCodigoProducto() + ") - Stock: " + cantidad;
     }
 }

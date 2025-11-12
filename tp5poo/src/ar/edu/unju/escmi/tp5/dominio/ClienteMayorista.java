@@ -1,24 +1,26 @@
 package ar.edu.unju.escmi.tp5.dominio;
 
 public class ClienteMayorista extends Cliente {
-    private String codigoCliente;
+    private int codigoCliente;
+    private int cantBultos;
 
-    public ClienteMayorista(String apellido, String nombre, String direccion, String codigoCliente) {
-        super(apellido, nombre, direccion);
+    public ClienteMayorista(String nombre, String domicilio, int dni, int telefono, int codigoCliente, int cantBultos) {
+        super(nombre, domicilio, dni, telefono);
         this.codigoCliente = codigoCliente;
+        this.cantBultos = cantBultos;
     }
 
     @Override
-    public double calcularDescuento(double total) {
-        return total; // no tiene descuento
+    public double aplicarDescuentoCliente(double total) {
+        
+        return total;
     }
 
-    public String getCodigoCliente() {
-        return codigoCliente;
-    }
+    public int getCodigoCliente() { return codigoCliente; }
+    public int getCantBultos() { return cantBultos; }
 
     @Override
-    public String toString() {
-        return super.toString() + " - Código: " + codigoCliente + " (Mayorista)";
+    public void mostrarDatos() {
+        System.out.println("[Mayorista] " + nombre + " - Código: " + codigoCliente + " - Domicilio: " + domicilio);
     }
 }
